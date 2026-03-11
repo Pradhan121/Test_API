@@ -1,5 +1,6 @@
 let authUser = require('../model/userAuth')
 let studentName = require('../model/studentName')
+let bcrypt = require('bcrypt')
 
 exports.register = async(req,res)=>{
     try{
@@ -33,11 +34,16 @@ exports.login = async(req,res)=>{
 exports.studentNameCreate = async(req,res)=>{
     try{
         const studentData = req.body
-        await studentName.create(studentData)
+
+        studentData.password = await bcrypt.hash(studentData.password,10)
+        studentData.profile = req.file.filename
+
+        const user = await studentName.create(studentData)
+        
         res.status(201).json({
             status: 'Success',
             message:'Data Enter success',
-            data: studentData
+            data: user
         })
     }
     catch(err){
@@ -79,7 +85,7 @@ exports.studentNameDlete = async(req,res)=>{
 exports.studentNameEdit = async(req,res)=>{
     try{
         const editId = req.params.id
-        const updateStudent = await studentName.findByIdAndUpdate(editId)
+        const updateStudent = await studentName.findByIdAndUpdate(editId,req.body , {new : true})
         res.status(200).json({
             status: 'Success',
             message: 'Data updated success',
