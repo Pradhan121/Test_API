@@ -2,41 +2,15 @@ let authUser = require('../model/userAuth')
 let studentName = require('../model/studentName')
 let bcrypt = require('bcrypt')
 
-exports.register = async(req,res)=>{
-    try{
-        const data = req.body
-        await authUser.create(data)
-        res.status(201).json({
-            status: 'Success',
-            message:'Data Enter success',
-            data: data
-        })
-    }
-    catch(err){
-        res.status(400).json({status:'fail',message: err.message})
-    }
-}
-exports.login = async(req,res)=>{
-    try{
-        const data = req.body
-        await authUser.create(data)
-        res.status(201).json({
-            status: 'Success',
-            message:'Data Enter success',
-            data: data
-        })
-    }
-    catch(err){
-        res.status(400).json({status:'fail',message: err.message})
-    }  
-}
-
 exports.studentNameCreate = async(req,res)=>{
     try{
         const studentData = req.body
 
         studentData.password = await bcrypt.hash(studentData.password,10)
-        studentData.profile = req.file.filename
+        studentData.profile = req.file.filename  // single file upload
+
+        const files = req.files.map(file => file.filename)    //  multiple files upload
+         studentData.profile = files
 
         const user = await studentName.create(studentData)
         
