@@ -21,7 +21,7 @@ router.post('/studentAUth',Uc.register)
 router.post('/studentAuth',Uc.login)
 
 router.post('/students',upload.single('profile'), Uc.studentNameCreate) // single file upload
-router.post('/students',upload.array('profile', 10), Uc.studentNameCreate) // multiple file upload
+// router.post('/students',upload.array('profile', 10), Uc.studentNameCreate) // multiple file upload
 router.get('/students',Uc.studentNameView)
 router.delete('/students/:id',Uc.studentNameDlete)
 router.put('/students/:id',Uc.studentNameEdit)
